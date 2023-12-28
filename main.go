@@ -89,6 +89,9 @@ func NewSpeech(from string, words string) string {
 }
 
 func EndSpeech(from string) string {
+	if _, ok := Chats[from]; !ok {
+		return "没有对话可以重置。请问有其他可以帮助您的吗？"
+	}
 	TokenUsed := Chats[from].TokenUsed
 	delete(Chats, from)
 	return "对话已重置，记忆已清空。共消耗token：" + strconv.Itoa(TokenUsed)
