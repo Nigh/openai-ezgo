@@ -29,7 +29,6 @@ func DefaultConfig(authToken string) NodeConfig {
 	}
 }
 func NewClientWithConfig(config NodeConfig) {
-	config = DefaultConfig(config.APIKey)
 	gptConfig := openai.DefaultConfig(config.APIKey)
 	if config.BaseURL != "" {
 		gptConfig.BaseURL = config.BaseURL
