@@ -12,7 +12,6 @@ type chatHistory struct {
 type ChatInstance struct {
 	Timeout   int
 	History   *chatHistory
-	MaxTokens int
 	TokenUsed int
 }
 

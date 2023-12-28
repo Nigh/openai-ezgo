@@ -15,6 +15,7 @@ type NodeConfig struct {
 	BaseURL         string
 	Timeout         int
 	TimeoutCallback func(string, int)
+	MaxTokens       int
 	HistoryLimit    int
 }
 
@@ -23,6 +24,7 @@ func DefaultConfig(authToken string) NodeConfig {
 		APIKey:       authToken,
 		BaseURL:      "",
 		Timeout:      300,
+		MaxTokens:    768,
 		HistoryLimit: 10,
 	}
 }
@@ -44,7 +46,6 @@ func getChat(from string) {
 		Chats[from] = ChatInstance{
 			Timeout:   config.Timeout,
 			History:   &chatHistory{[]openai.ChatCompletionMessage{}, []openai.ChatCompletionMessage{}},
-			MaxTokens: 768,
 			TokenUsed: 0,
 		}
 	}
@@ -72,7 +73,7 @@ func NewSpeech(from string, words string) string {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			MaxTokens: thisChat.MaxTokens,
+			MaxTokens: config.MaxTokens,
 			Model:     openai.GPT3Dot5Turbo,
 			Messages:  thisChat.getAllHistory(),
 		},
