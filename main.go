@@ -28,7 +28,8 @@ func DefaultConfig(authToken string) NodeConfig {
 		HistoryLimit: 10,
 	}
 }
-func NewClientWithConfig(config NodeConfig) {
+func NewClientWithConfig(cfg NodeConfig) {
+	config = cfg
 	gptConfig := openai.DefaultConfig(config.APIKey)
 	if config.BaseURL != "" {
 		gptConfig.BaseURL = config.BaseURL
@@ -52,18 +53,21 @@ func getChat(from string) {
 func NewCharacterSet(from string, words string) string {
 	getChat(from)
 	thisChat := Chats[from]
+	defer func() { Chats[from] = thisChat }()
 	thisChat.History.BaseMemory = []openai.ChatCompletionMessage{
 		{
 			Role:    openai.ChatMessageRoleSystem,
 			Content: words,
 		},
 	}
+	thisChat.Timeout = config.Timeout
 	return "调教指令已保存，最后一次调教设置将会持续保留并置于对话记忆的最开始处。直到对话重置。"
 }
 func NewSpeech(from string, words string) string {
 	getChat(from)
 
 	thisChat := Chats[from]
+	defer func() { Chats[from] = thisChat }()
 	thisChat.History.WorkMemory = append(thisChat.History.WorkMemory, openai.ChatCompletionMessage{
 		Role:    openai.ChatMessageRoleUser,
 		Content: words,
