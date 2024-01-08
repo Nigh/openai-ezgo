@@ -63,7 +63,7 @@ func NewCharacterSet(from string, words string) string {
 	thisChat.Timeout = config.Timeout
 	return "调教指令已保存，最后一次调教设置将会持续保留并置于对话记忆的最开始处。直到对话重置。"
 }
-func NewSpeech(from string, words string) string {
+func NewSpeechMaxToken(from string, words string, maxToken int) string {
 	getChat(from)
 
 	thisChat := Chats[from]
@@ -76,7 +76,7 @@ func NewSpeech(from string, words string) string {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			MaxTokens: config.MaxTokens,
+			MaxTokens: maxToken,
 			Model:     openai.GPT3Dot5Turbo,
 			Messages:  thisChat.getAllHistory(),
 		},
@@ -89,6 +89,9 @@ func NewSpeech(from string, words string) string {
 	}
 	thisChat.TokenUsed += resp.Usage.TotalTokens
 	return resp.Choices[0].Message.Content
+}
+func NewSpeech(from string, words string) string {
+	return NewSpeechMaxToken(from, words, config.MaxTokens)
 }
 
 func EndSpeech(from string) string {
