@@ -3,7 +3,7 @@ module github.com/Nigh/openai-ezgo
 go 1.21.5
 
 require (
-	github.com/sashabaranov/go-openai v1.17.9
+	github.com/sashabaranov/go-openai v1.27.0
 	github.com/spf13/viper v1.18.2
 )
 

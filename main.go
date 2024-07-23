@@ -77,7 +77,7 @@ func NewSpeechMaxToken(from string, words string, maxToken int) string {
 		context.Background(),
 		openai.ChatCompletionRequest{
 			MaxTokens: maxToken,
-			Model:     openai.GPT3Dot5Turbo,
+			Model:     openai.GPT4oMini,
 			Messages:  thisChat.getAllHistory(),
 		},
 	)
